@@ -1,7 +1,8 @@
 public interface IGameController
 {
+	public void addBead();
 	public void playerSetup();
 	public void getMove();
-	public void showBoard(); 
+	public void checkWin(); 
 	public void nextTurn();
 }

@@ -5,17 +5,17 @@ import javax.swing.JLabel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class TestView
+public class TestView implements IView
 {
-	private Model model;
-	private TestController controller;
+	private IModel model;
+	private IGameController controller;
 	private JFrame frame;
 	private JLabel label = new JLabel();
 
-	public TestView(Model model)
+	public TestView(IModel m)
 	{
-		this.model = model;
-		this.controller = new TestController(model);
+		this.model = m;
+		this.controller = new TestController(m);
 
 		frame = new JFrame();
 		label.setText(Integer.toString(model.getNumBeads()));
@@ -36,9 +36,11 @@ public class TestView
 		frame.setVisible(true);
 	}
 
-	public void updateAll()
+	public void update()
 	{
-		System.out.println("Updating view");
+		// subcomponent.update()
+		// otherSubcomponent.update()
+		// get updated information from model
 		label.setText(Integer.toString(model.getNumBeads()));
 		frame.repaint();
 	}

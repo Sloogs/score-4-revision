@@ -1,11 +1,11 @@
-public class TestController
+public class TestController implements IGameController
 {
-	Model model;
-	TestView view;
+	private IModel model;
+	private IView view;
 
-	public TestController(Model model)
+	public TestController(IModel m)
 	{
-		this.model = model;
+		this.model = m;
 	}
 
 	public void addBead()
@@ -13,8 +13,17 @@ public class TestController
 		model.addBead();
 	}
 
-	public void getNumBeads()
+	public void getBead() {}
+	
+	public int getNumBeads()
 	{
-		model.getNumBeads();
+		int numBeads = model.getNumBeads();
+		return numBeads;
 	}
+
+	public void playerSetup() {}
+	public void getMove() {}
+	public void checkWin() {}
+	public void nextTurn() {}
+
 }
