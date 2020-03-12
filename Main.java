@@ -34,7 +34,6 @@ public class Main
 				}
 				showBoard();
 				nextTurn();
-				board.getGrid().checkWin();
 			}
 
 			// TESTING MODE
