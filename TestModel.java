@@ -37,9 +37,9 @@ public class TestModel implements IModel
 		view.update();
 	}
 
-	public Bead getBead(int x, int y, int z)
+	public Beadlike getBead(int x, int y, int z)
 	{
-		Bead bead = board.getGrid().getPeg(x,y).getBead(z);
+		Beadlike bead = board.getGrid().getPeg(x,y).getBead(z);
 		return bead;
 	}
 

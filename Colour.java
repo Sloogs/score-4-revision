@@ -1,4 +1,4 @@
 public enum Colour
 {
-	WHITE, BLACK
+	WHITE, BLACK, EMPTY
 }

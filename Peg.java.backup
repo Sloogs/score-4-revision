@@ -2,21 +2,16 @@ import java.util.ArrayList;
 
 public class Peg
 {
-	private final int MAX_BEADS = 4;
 	private int xCoord = 0;
 	private int yCoord = 0;
 	private int numBeads = 0;
-	private Beadlike[] beads = new Beadlike[4];
+	private Bead[] beads = { null, null, null, null };
 
 	public Peg(int x, int y)
 	{
 		Debug.log("Creating Peg at: (x: " + x + ", y: " + y +")");
 		xCoord = x;
 		yCoord = y;
-		for (int i = 0; i < MAX_BEADS; i++)
-		{
-			beads[i] = new EmptyBead();
-		}
 	}
 
 	public boolean addBead(Colour colour)
@@ -36,7 +31,7 @@ public class Peg
 		return successful;
 	}
 
-	public boolean removeBead(Beadlike bead)
+	public boolean removeBead(Bead bead)
 	{
 		boolean successful = false;
 		if (numBeads > 0) { 
@@ -56,9 +51,9 @@ public class Peg
 		return successful;
 	}
 
-	public Beadlike getBead(int n)
+	public Bead getBead(int n)
 	{
-		Beadlike bead = beads[n];
+		Bead bead = beads[n - 1];
 		int x = bead.getXCoord();
 		int y = bead.getYCoord();
 		int z = bead.getZCoord();
@@ -66,7 +61,7 @@ public class Peg
 		return bead;
 	}
 
-	public Beadlike[] getAllBeads()
+	public Bead[] getAllBeads()
 	{
 		Debug.log("Getting all beads from peg: (x: " + xCoord + ", y: " + yCoord + ")");
 		return beads;

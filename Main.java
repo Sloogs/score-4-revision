@@ -8,14 +8,9 @@ public class Main
 {
 	private static Scanner input = new Scanner(System.in);
 	private static String inputString;
-	private static Board board = new Board();
-	private static Player whitePlayer = new Player(Colour.WHITE);
-	private static Player blackPlayer = new Player(Colour.BLACK);
-	private static Player currentPlayer = whitePlayer;
 	private static boolean testingMode = false;
 	private static boolean running = true;
-	private static boolean hasWon = false; 
-	private static Move currentMove;
+	private static boolean hasWon = false;
 
 	public static void main(String[] args)
 	{
@@ -23,48 +18,19 @@ public class Main
 		System.out.println("Welcome to Score 4!");
 		Debug.log("Initalizing game and creating elements.");
 
+		GameState gameState = new GameState();
 		while (running) {
 			// GAME
-			playerSetup();
+			playerSetup(gameState);
 			while (!hasWon) {
-				boolean success = getMove();
+				boolean success = getMove(gameState);
 				if (success)
 				{
-					playMove(currentMove);
+					playMove(gameState);
 				}
-				showBoard();
-				nextTurn();
-			}
-
-			// TESTING MODE
-			if (testingMode)
-			{
-				if (inputString.startsWith("add")) {
-					String pattern = "add (black|white) bead to ([A-D][1-4]).";
-					Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-					Matcher m = p.matcher(inputString);
-					m.matches();
-
-					System.out.println(m.group(1));
-					System.out.println(m.group(2));
-				}
-				else if (inputString.startsWith("remove")) {
-					String pattern = "remove (black|white) bead from ([A-D][1-4]).";
-					Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-					Matcher m = p.matcher(inputString);
-					m.matches();
-
-					System.out.println(m.group(1));
-					System.out.println(m.group(2));
-				}
-				else if (inputString.contains("show board"))
-				{
-					// boardTestViewer.showBoard();
-				}
-				else if (inputString.contains("quit"))
-				{
-					running = false;
-				}
+				hasWon = gameState.getBoard().getGrid().checkWin();
+				showBoard(gameState);
+				nextTurn(gameState);
 			}
 		}
 	}
@@ -77,32 +43,42 @@ public class Main
 		}
 	}
 
-	public static void playerSetup()
+	public static void playerSetup(GameState gs)
 	{
-		System.out.println("First player will be: AI or Human?:");
-		inputString = input.nextLine();
-		if (inputString.equals("Human"))
-		{
-			whitePlayer = new Player(Colour.WHITE);
-		}
+		boolean firstPlayerSelected = false;
+		boolean secondPlayerSelected = false;
 
-		System.out.println("Second player will be: AI or Human?");
-		inputString = input.nextLine();
-		if (inputString.equals("Human"))
-		{
-			blackPlayer = new Player(Colour.BLACK);
+		while (!firstPlayerSelected) {
+			System.out.println("First player will be: AI or Human?:");
+			inputString = input.nextLine();
+			if (inputString.toLowerCase().equals("human"))
+			{
+				gs.setWhitePlayer(new Player(Colour.WHITE));
+				firstPlayerSelected = true;
+			}
 		}
+	
+		while (!secondPlayerSelected) {
+			System.out.println("Second player will be: AI or Human?");
+			inputString = input.nextLine();
+			if (inputString.toLowerCase().equals("human"))
+			{
+				gs.setBlackPlayer(new Player(Colour.BLACK));
+				secondPlayerSelected = true;
+			}
+		}
+	
 	}
 
-	public static boolean getMove()
+	public static boolean getMove(GameState gs)
 	{
 		boolean result = false;
 		int xCoord = 0;
 		int yCoord = 0;
-		System.out.println("Current turn is " + currentPlayer.getColour() + "'s turn.");
+		System.out.println("Current turn is " + gs.getCurrentPlayer().getColour() + "'s turn.");
 		System.out.println("Type a coordinate that you would like to place a bead at "
 				+ "(.e.g. A1, B2; letters A-D and numbers 1-4 are valid.).");
-		System.out.println("Enter " + currentPlayer.getColour() + "'s move:");
+		System.out.println("Enter " + gs.getCurrentPlayer().getColour() + "'s move:");
 		inputString = input.nextLine();
 		String pattern = "([A-D])([1-4])";
 		Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
@@ -113,8 +89,8 @@ public class Main
 			yCoord = Integer.parseInt(m.group(2)) - 1;
 			Debug.log("getMove() xCoord: " + xCoord);
 			Debug.log("getMove() yCoord: " + yCoord);
-			Move move = new Move(currentPlayer, xCoord, yCoord);
-			currentMove = move;
+			Move move = new Move(gs.getCurrentPlayer(), xCoord, yCoord);
+			gs.setCurrentMove(move);
 			result = true;
 		}
 		else
@@ -127,19 +103,20 @@ public class Main
 		return result;
 	}
 
-	public static void playMove(Move m)
+	public static void playMove(GameState gs)
 	{
+		Move m = gs.getCurrentMove();
 		Player player = m.getPlayer();
 		int xCoord = m.getXCoord();
 		int yCoord = m.getYCoord();
 		Debug.log("playMove() xCoord: " + xCoord);
 		Debug.log("playMove() yCoord: " + yCoord);
-		player.placeBead(board, xCoord, yCoord);
+		player.placeBead(gs.getBoard(), xCoord, yCoord);
 	}
 
-	public static void showBoard()
+	public static void showBoard(GameState gs)
 	{
-		Peg[][] pegs = board.getGrid().getAllPegs();
+		Peg[][] pegs = gs.getBoard().getGrid().getAllPegs();
 		String fourthRow = "";
 		String thirdRow = "";
 		String secondRow = "";
@@ -165,8 +142,8 @@ public class Main
 			//     W
 			//     B
 			//
-			// I had considered an easier method but unfortunately System.out.println builds
-			// something top-down but we need it built bottom-up like so:
+			// Unfortunately System.out.println builds something top-down which is not what we want
+			// thus the complicated method. E.g.
 			//     
 			//     B
 			//     W
@@ -188,31 +165,31 @@ public class Main
 
 				if (numBeads == 4)
 				{
-					fourthRowBead = (peg.getBead(4).getColour() == Colour.WHITE) ? "W" : "B";
-					thirdRowBead = (peg.getBead(3).getColour() == Colour.WHITE) ? "W" : "B";
-					secondRowBead = (peg.getBead(2).getColour() == Colour.WHITE) ? "W" : "B";
-					firstRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					fourthRowBead = (peg.getBead(3).getColour() == Colour.WHITE) ? "W" : "B";
+					thirdRowBead = (peg.getBead(2).getColour() == Colour.WHITE) ? "W" : "B";
+					secondRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					firstRowBead = (peg.getBead(0).getColour() == Colour.WHITE) ? "W" : "B";
 				}
 				else if (numBeads == 3)
 				{
 					fourthRowBead = "|";
-					thirdRowBead = (peg.getBead(3).getColour() == Colour.WHITE) ? "W" : "B";
-					secondRowBead = (peg.getBead(2).getColour() == Colour.WHITE) ? "W" : "B";
-					firstRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					thirdRowBead = (peg.getBead(2).getColour() == Colour.WHITE) ? "W" : "B";
+					secondRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					firstRowBead = (peg.getBead(0).getColour() == Colour.WHITE) ? "W" : "B";
 				}
 				else if (numBeads == 2)
 				{
 					fourthRowBead = "|";
 					thirdRowBead = "|";
-					secondRowBead = (peg.getBead(2).getColour() == Colour.WHITE) ? "W" : "B";
-					firstRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					secondRowBead = (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					firstRowBead = (peg.getBead(0).getColour() == Colour.WHITE) ? "W" : "B";
 				}
 				else if (numBeads == 1)
 				{
 					fourthRowBead += "|";
 					thirdRowBead += "|";
 					secondRowBead += "|";
-					firstRowBead += (peg.getBead(1).getColour() == Colour.WHITE) ? "W" : "B";
+					firstRowBead += (peg.getBead(0).getColour() == Colour.WHITE) ? "W" : "B";
 				}
 				else if (numBeads == 0)
 				{
@@ -243,15 +220,18 @@ public class Main
 		}
 	}
 
-	public static void nextTurn()
+	public static void nextTurn(GameState gs)
 	{
-		if (currentPlayer.equals(whitePlayer))
+		Player whitePlayer = gs.getWhitePlayer();
+		Player blackPlayer = gs.getBlackPlayer();
+
+		if (gs.getCurrentPlayer().equals(whitePlayer))
 		{
-			currentPlayer = blackPlayer;
+			gs.setCurrentPlayer(blackPlayer);
 		}
-		else if (currentPlayer.equals(blackPlayer))
+		else if (gs.getCurrentPlayer().equals(blackPlayer))
 		{
-			currentPlayer = whitePlayer;
+			gs.setCurrentPlayer(whitePlayer);
 		}
 	}
 }

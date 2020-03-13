@@ -4,18 +4,22 @@ public class Grid
 {
 	private final int ROWS = 4;
 	private final int COLUMNS = 4;
+	private final int HEIGHT = 4;
 	private Peg[][] pegs = new Peg[ROWS][COLUMNS];
-	private Bead[] line = new Bead[4];
+	private ArrayList<Line> lines;
 
 	public Grid()
 	{
-		Debug.log("Creating Grid.");
+		Debug.log("Creating Pegs in Grid.");
 		for (int x = 0; x < ROWS; x++)
 		{
 			for (int y = 0; y < COLUMNS; y++) {
 				pegs[x][y] = new Peg(x, y);
 			}
 		}
+
+		Debug.log("Creating Lines in Grid");
+		findAndListBeadLines();
 	}
 
 	public Peg getPeg(int x, int y)
@@ -28,23 +32,172 @@ public class Grid
 		return pegs;
 	}
 
-	public void checkWin()
+	/* This method finds and creates a list of lines from the already existing peg grid and beads
+	 * that were created by the Grid.
+	 * Note that the Pegs have to be created first before this method can find the lines.
+	 * @return Nothing.
+	 */
+	public void findAndListBeadLines()
 	{
-		// Check all rows.
-		Bead[] line = new Bead[4];
-		ArrayList<Bead[]> lineList = new ArrayList<Bead[]>();
-		line[0] = getPeg(0, 0).getBead(1);
-		line[1] = getPeg(0, 0).getBead(2);
-		line[2] = getPeg(0, 0).getBead(3);
-		line[3] = getPeg(0, 0).getBead(4);
+		Line line;
+		lines = new ArrayList<Line>();
+		Beadlike[] lineBuilder = new Beadlike[4];
 
-		lineList.add(line);
-		for (Bead[] lineListLine: lineList)
-		{
-			for (Bead bead: lineListLine)
-			{
-				Debug.log("" + bead.getColour());
+		// Check all ROWS.
+		for (int x = 0; x < ROWS; x++) {
+			for (int z = 0; z < HEIGHT; z++) {
+				for (int y = 0; y < COLUMNS; y++) {
+					lineBuilder[y] =  getPeg(x, y).getBead(z);
+				}
+				line = new Line(lineBuilder);
+				lines.add(line);
+				lineBuilder = new Beadlike[4];
 			}
 		}
+
+		// Check all COLUMNS.
+		for (int y = 0; y < COLUMNS; y++) {
+			for (int z = 0; z < HEIGHT; z++) {
+				for (int x = 0; x < ROWS; x++) {
+					lineBuilder[x] =  getPeg(x, y).getBead(z);
+				}
+				line = new Line(lineBuilder);
+				lines.add(line);
+				lineBuilder = new Beadlike[4];
+			}
+		}
+
+		// Check for HEIGHT.
+		for (int x = 0; x < ROWS; x++) {
+			for (int y = 0; y < COLUMNS; y++) {
+				for (int z = 0; z < HEIGHT; z++) {
+					lineBuilder[z] =  getPeg(x, y).getBead(z);
+				}
+				line = new Line(lineBuilder);
+				lines.add(line);
+				lineBuilder = new Beadlike[4];
+			}
+		}
+
+		// Check for DIAGONAL ROWS, bottom up.
+		for (int x = 0; x < ROWS; x++) {
+			for (int y = 0; y < COLUMNS; y++) {
+				lineBuilder[y] =  getPeg(x, y).getBead(y);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for DIAGONAL ROWS, top down.
+		for (int x = 0; x < ROWS; x++) {
+			for (int y = 3, index = 0; y >= 0; y--, index++) {
+				lineBuilder[index] =  getPeg(x, y).getBead(y);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for DIAGONAL COLUMNS, bottom up.
+		for (int y = 0; y < COLUMNS; y++) {
+			for (int x = 0; x < ROWS; x++) {
+				lineBuilder[x] =  getPeg(x, y).getBead(x);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for DIAGONAL COLUMNS, top down.
+		for (int y = 0; y < COLUMNS; y++) {
+			for (int x = 3, index = 0; x >= 0; x--, index++) {
+				lineBuilder[index] =  getPeg(x, y).getBead(x);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for FLAT DIAGONALS, NW to SE.
+		for (int z = 0; z < HEIGHT; z++) {
+			for (int x = 0; x < ROWS; x++) {
+				lineBuilder[x] =  getPeg(x, x).getBead(z);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for FLAT DIAGONALS, SW to NE.
+		for (int z = 0; z < HEIGHT; z++) {
+			for (int x = 3, y = 0; x >= 0; x--, y++) {
+				lineBuilder[y] =  getPeg(x, y).getBead(z);
+			}
+			line = new Line(lineBuilder);
+			lines.add(line);
+			lineBuilder = new Beadlike[4];
+		}
+
+		// Check for DIAGONAL DIAGONALS, NW to SE, bottom up.
+		for (int x = 0; x < ROWS; x++) {
+			lineBuilder[x] = getPeg(x, x).getBead(x);	
+		}
+		line = new Line(lineBuilder);
+		lines.add(line);
+		lineBuilder = new Beadlike[4];
+
+		// Check for DIAGONAL DIAGONALS, NW to SE, top down.
+		for (int x = 0, z = 3; x < ROWS && z >= 0; x++, z--) {
+			lineBuilder[x] =  getPeg(x, x).getBead(z);
+		}
+		line = new Line(lineBuilder);
+		lines.add(line);
+		lineBuilder = new Beadlike[4];
+
+		// Check for DIAGONAL DIAGONALS, SW to NE, bottom up.
+		for (int x = 3, y = 0, z = 0; x >= 0 && y < COLUMNS; x--, y++, z++) {
+			lineBuilder[z] =  getPeg(x, y).getBead(z);
+		}
+		line = new Line(lineBuilder);
+		lines.add(line);
+		lineBuilder = new Beadlike[4];
+
+		// Check for DIAGONAL DIAGONALS, SW to NE, bottom up.
+		for (int x = 3, y = 0, z = 3; x >= 0 && y < COLUMNS; x--, y++, z--) {
+			lineBuilder[y] =  getPeg(x, y).getBead(z);
+		}
+		line = new Line(lineBuilder);
+		lines.add(line);
+		lineBuilder = new Beadlike[4];
 	}
+
+	public boolean checkWin()
+	{
+		findAndListBeadLines();
+		boolean result = false;
+
+		for (Line line: lines)
+		{
+			Beadlike[] beads = line.getBeads();
+			int numBlack = 0;
+			int numWhite = 0;
+			for (Beadlike bead: beads) {
+				if (bead.getColour() == Colour.WHITE) {
+					numWhite++;
+				}
+
+				if (bead.getColour() == Colour.BLACK) {
+					numBlack++;
+				}
+			}
+
+			if (numWhite == 4 || numBlack == 4) {
+				result = true;
+			}
+		}
+
+		return result;
+	}
+
 }

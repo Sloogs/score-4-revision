@@ -1,4 +1,4 @@
-public class Bead
+public class Bead implements Beadlike
 {
 	private static int numWhite;
 	private static int numBlack;
@@ -7,6 +7,7 @@ public class Bead
 	private int xCoord;
 	private int yCoord;
 	private int zCoord;
+	private boolean isEmpty;
 
 	public Bead(Colour c, int x, int y, int z)
 	{
@@ -15,12 +16,14 @@ public class Bead
 		{
 			colour = Colour.WHITE;
 			beadId = numWhite + 1;
+			isEmpty = false;
 			numWhite++;
 		}
 		else
 		{
 			colour = Colour.BLACK;
 			beadId = numBlack + 1;
+			isEmpty = false;
 			numBlack++;
 		}
 
@@ -53,5 +56,10 @@ public class Bead
 	public int getZCoord()
 	{
 		return zCoord;
+	}
+
+	public boolean isEmpty()
+	{
+		return isEmpty;
 	}
 }
