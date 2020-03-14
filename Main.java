@@ -18,27 +18,94 @@ public class Main
 		System.out.println("Welcome to Score 4!");
 		Debug.log("Initalizing game and creating elements.");
 
-		GameState gameState = new GameState();
-		while (running) {
-			// GAME
-			playerSetup(gameState);
-			while (!hasWon) {
-				boolean success = getMove(gameState);
-				if (success)
-				{
-					playMove(gameState);
-				}
-				hasWon = gameState.getBoard().getGrid().checkWin();
-				showBoard(gameState);
-				nextTurn(gameState);
+		if (args.length > 0)
+		{
+			if (args[0].equals("--test"))
+			{
+				testingMode = true;
 			}
 		}
-	}
 
-	public static void clearBoard(Board board,int rows, int cols){
-		for(int i = 0; i < rows; i++){
-			for(int j=0; j < cols; j++){
-				board.getGrid().getPeg(i,j).emptyBeads();
+		GameState gameState = new GameState();
+		if (testingMode) {
+			System.out.println("Entering TEST MODE");
+			while (running) {
+				String inputString = input.nextLine();
+				if (inputString.startsWith("add")) {
+					String pattern = "add (black|white) bead to ([A-D])([1-4]).";
+					Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+					Matcher m = p.matcher(inputString);
+					int row = 0;
+					int column = 0;
+
+					if (m.matches()) {
+						Debug.log("Match succeeded: " + m.group(2) + m.group(3));
+						row = Helper.translateABCDToNumber(m.group(2));
+						column = Integer.parseInt(m.group(3)) - 1;
+
+						if (m.group(1).toLowerCase().equals("white")) {
+							gameState.getWhitePlayer().placeBead(
+									gameState.getBoard(), row, column
+							);
+						}
+						else if (m.group(1).toLowerCase().equals("black"))
+						{
+							gameState.getBlackPlayer().placeBead(
+									gameState.getBoard(), row, column
+							);
+						}
+						else
+						{
+							Debug.log("Hmm...");
+						}
+					}
+				}
+				else if (inputString.startsWith("remove")) {
+					String pattern = "remove bead from ([A-D])([1-4]).";
+					Pattern p = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+					Matcher m = p.matcher(inputString);
+					int row = 0;
+					int column = 0;
+
+					if (m.matches())
+					{
+						row = Helper.translateABCDToNumber(m.group(1));
+						column = Integer.parseInt(m.group(2)) - 1;
+						gameState.getBoard().getGrid().
+								getPeg(row, column).removeBead();
+					}
+
+	
+				}
+				else if (inputString.contains("show board"))
+				{
+					showBoard(gameState);
+				}
+				else if (inputString.contains("clear board"))
+				{
+					gameState.getBoard().clearBoard();
+				}
+				else if (inputString.contains("quit"))
+				{
+					running = false;
+				}
+			}
+		}
+		else
+		{
+			while (running) {
+				// GAME
+				playerSetup(gameState);
+				while (!hasWon) {
+					boolean success = getMove(gameState);
+					if (success)
+					{
+						playMove(gameState);
+					}
+					hasWon = gameState.getBoard().getGrid().checkWin();
+					showBoard(gameState);
+					nextTurn(gameState);
+				}
 			}
 		}
 	}

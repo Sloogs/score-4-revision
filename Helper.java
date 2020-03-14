@@ -3,7 +3,7 @@ public class Helper
 	public static int translateABCDToNumber(String coord)
 	{
 		String[] letters = {"A", "B", "C", "D"};
-		String letterToTranslate = coord.substring(0);
+		String letterToTranslate = coord.substring(0).toLowerCase();
 		int xCoord = 0;
 		Debug.log("Letter given: " + coord + ", "
 				+ "letter to translate: " + letterToTranslate);

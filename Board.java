@@ -12,4 +12,19 @@ public class Board
 	{
 		return grid;
 	}
+
+	public void clearBoard()
+	{
+		Peg[][] pegs = grid.getAllPegs();
+
+		for (Peg[] row: pegs) {
+			for (Peg peg: row) {
+				int numBeads = peg.getNumBeads();
+				for (int i = 0; i < numBeads; i++)
+				{
+					peg.removeBead();
+				}
+			}
+		}
+	}
 }

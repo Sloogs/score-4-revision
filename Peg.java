@@ -36,17 +36,15 @@ public class Peg
 		return successful;
 	}
 
-	public boolean removeBead(Beadlike bead)
+	public boolean removeBead()
 	{
+		Debug.log("Attempting to remove bead.");
 		boolean successful = false;
-		if (numBeads > 0) { 
-			int x = bead.getXCoord();
-			int y = bead.getYCoord();
-			int z = bead.getZCoord();
-			Debug.log("Removing bead at: (x: " + x + ", y: " + y + ", z: " + z);
-			beads[numBeads - 1] = null;
+		if (numBeads > 0) {
+			beads[numBeads - 1] = new EmptyBead();
 			numBeads--;
 			successful = true;
+			Debug.log("Successfully removed bead.");
 		}
 		else
 		{
