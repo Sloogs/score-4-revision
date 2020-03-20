@@ -33,31 +33,56 @@ public class Bead implements Beadlike
 		Debug.log("Bead Id: " + beadId);
 	}
 
+	/**
+	 * Gets colour.
+	 * @return Returns the Colour of the bead.
+	 */
 	public Colour getColour()
 	{
 		return colour;
 	}
 
+	/**
+	 * Gets bead ID.
+	 * @return Returns the BeadId of the bead.
+	 */
 	public int getId()
 	{
 		return beadId;
 	}
 
+	/**
+	 * Gets x coordinate (row).
+	 * @return Returns an integer of the x coordinate of the bead.
+	 */
 	public int getXCoord()
 	{
 		return xCoord;
 	}
 
+	/**
+	 * Gets y coordinate (column).
+	 * @return Returns an integer of the y coordinate of the bead.
+	 */
 	public int getYCoord()
 	{
 		return yCoord;
 	}
 
+	/**
+	 * Gets z coordnate (height).
+	 * @return Returns an integer of the z coordinate of the bead.
+	 */
 	public int getZCoord()
 	{
 		return zCoord;
 	}
 
+	/**
+	 * Gets whether the bead is empty or not.
+	 * Only the EmptyBead class will have this true.
+	 * @return Returns whether the bead in this position is empty or not.
+	 */
 	public boolean isEmpty()
 	{
 		return isEmpty;

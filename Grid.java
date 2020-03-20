@@ -32,10 +32,14 @@ public class Grid
 		return pegs;
 	}
 
-	/* This method finds and creates a list of lines from the already existing peg grid and beads
-	 * that were created by the Grid.
-	 * Note that the Pegs have to be created first before this method can find the lines.
-	 * @return Nothing.
+	/**
+	 * This method finds and creates a list of lines from the already existing
+	 * Peg grid and Beads that were created by the Grid.
+	 *
+	 * It is used to keep a list of Lines for the checkWin() method.
+	 * 
+	 * Note that the Pegs have to be created first before this method can find
+	 * any Lines.
 	 */
 	public void findAndListBeadLines()
 	{

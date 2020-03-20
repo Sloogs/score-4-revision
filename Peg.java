@@ -8,6 +8,11 @@ public class Peg
 	private int numBeads = 0;
 	private Beadlike[] beads = new Beadlike[4];
 
+	/**
+	 * The constructor is created by the Grid and creates a peg at he given x
+	 * and y coordinate. There is no need for a programmer to create a peg
+	 * manually as it is already done by the Grid.
+	 */
 	public Peg(int x, int y)
 	{
 		Debug.log("Creating Peg at: (x: " + x + ", y: " + y +")");
@@ -19,6 +24,12 @@ public class Peg
 		}
 	}
 
+	/**
+	 * Call this to add a Bead to this individual Peg. Although for actual
+	 * gameplay is is perhaps better to call PLayer.placeBead(...) instead.
+	 * @param colour The colour of the bead you wish to create. The colour can
+	 *               be either Colour.WHITE or Colour.BLACK.
+	 */
 	public boolean addBead(Colour colour)
 	{
 		boolean successful = false;
@@ -36,6 +47,10 @@ public class Peg
 		return successful;
 	}
 
+	/**
+	 * Removes a bead from this individual Peg.
+	 * @return
+	 */
 	public boolean removeBead()
 	{
 		Debug.log("Attempting to remove bead.");
@@ -54,6 +69,11 @@ public class Peg
 		return successful;
 	}
 
+	/**
+	 * Gets the nth Bead from this Peg.
+	 * @param n The nth Bead you want from the Peg, from 0-3.
+	 * @return The Bead you wish to get.
+	 */
 	public Beadlike getBead(int n)
 	{
 		Beadlike bead = beads[n];
@@ -64,24 +84,43 @@ public class Peg
 		return bead;
 	}
 
+	/**
+	 * Gets all Beads from this Peg and returns a Beadlike array.
+	 * @return
+	 */
 	public Beadlike[] getAllBeads()
 	{
 		Debug.log("Getting all beads from peg: (x: " + xCoord + ", y: " + yCoord + ")");
 		return beads;
 	}
 
+	/**
+	 * Gets the x-coordinate (row) of the Peg.
+	 * @return Integer representing the x-coordinate.
+	 */
 	public int getXCoord() {
 		return xCoord;
 	}
 
+	/**
+	 * Gets the y-coordinate (column) of the Peg.
+	 * @return Integer representing the x-coordinate.
+	 */
 	public int getYCoord() {
 		return yCoord;
 	}
 
+	/**
+	 * Gets the number of Beads on the Peg.
+	 * @return An integer representing the number of beads on the peg.
+	 */
 	public int getNumBeads() {
 		return numBeads;
 	}
 
+	/**
+	 * Empties the beads on the Peg.
+	 */
 	public void emptyBeads(){
 		for (int i = 0; i < beads.length; i++)
 			beads[i] = null;
