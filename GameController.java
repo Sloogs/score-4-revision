@@ -11,11 +11,18 @@ public class GameController
     this.model = m;
   }
 
+  /**
+   * Sets the GameView that this GameController is associated with. 
+   * @param v The view to attach to this GameController.
+   */
   public void setView(GameView v)
   {
     view = v;
   }
 
+  /**
+   * Initializes the game.
+   */
   public void startGame() {
     GameState gamestate = model.getGameState();
     Stage stage = gamestate.getStage();
@@ -29,6 +36,9 @@ public class GameController
     advanceRound();
   }
 
+  /**
+   * Advances the round to the next stage.
+   */
   public void advanceRound()
   {
     GameState gamestate = model.getGameState();
@@ -54,7 +64,11 @@ public class GameController
     }
   }
 
-
+  /**
+   * Gets the move that the white (human) player wishes to play.
+   * @param x The x coordinate that the white player wishes to play.
+   * @param y The y coordinate that the white player wishes to play.
+   */
   public void getWhiteMove(int x, int y)
   {
     GameState gamestate = model.getGameState();
@@ -66,6 +80,11 @@ public class GameController
     }
   }
 
+  /**
+   * Gets the move that the white (AI) player wishes to play.
+   * @param x The x coordinate that the white player wishes to play.
+   * @param y The y coordinate that the white player wishes to play.
+   */
   public void getBlackMove()
   {
     GameState gamestate = model.getGameState();
@@ -77,6 +96,9 @@ public class GameController
     advanceRound();
   }
 
+  /**
+   * Displays a win message in the status area in the View.
+   */
   public void showWinMessage()
   {
     GameState gamestate = model.getGameState();
@@ -96,16 +118,25 @@ public class GameController
     }
   }
 
+  /**
+   * Displays the reset button in the status area in the View.
+   */
   public void showResetButton()
   {
     view.getResetButton().setVisible(true);
   }
 
+  /**
+   * Hides the reset button in the status area in the View.
+   */
   public void hideResetButton()
   {
     view.getResetButton().setVisible(false);
   }
 
+  /**
+   * Resets the game.
+   */
   public void resetGame()
   {
     GameState gamestate = model.getGameState();
@@ -113,6 +144,4 @@ public class GameController
     startGame();
     view.update();
   }
-
-  public void nextTurn() {}
 }

@@ -8,6 +8,10 @@ public class Grid
   private Peg[][] pegs = new Peg[ROWS][COLUMNS];
   private ArrayList<Line> lines;
 
+  /**
+   * Constructs the Grid. The Grid consists of Pegs. The Pegs are then used to keep track of any
+   * Lines that may have formed.
+   */
   public Grid()
   {
     Debug.log("Creating Pegs in Grid.");
@@ -22,11 +26,20 @@ public class Grid
     findAndListBeadLines();
   }
 
+  /**
+   * Get a specific Peg at position x, y. x and y should be an integer value between 0-3.
+   * @param x The x coordinate of the peg. An integer value between 0-3.
+   * @param y The y coordinate of the peg. An integer value between 0-3.
+   * @return The Peg at the x and y coordinates provided.
+   */
   public Peg getPeg(int x, int y)
   {
     return pegs[x][y];
   }
 
+  /**
+   * Get every peg on the Grid.
+   */
   public Peg[][] getAllPegs()
   {
     return pegs;
@@ -176,6 +189,10 @@ public class Grid
     lineBuilder = new Beadlike[4];
   }
 
+  /**
+   * Checks each Line in the Grid to see if there are any winning combinations.
+   * @return A boolean indicating whether a win has been found.
+   */
   public boolean getWinState()
   {
     findAndListBeadLines();
@@ -183,6 +200,8 @@ public class Grid
 
     for (Line line: lines)
     {
+
+      // These loops count the number of white and black beads in a Line.
       Beadlike[] beads = line.getBeads();
       int numBlack = 0;
       int numWhite = 0;
@@ -196,6 +215,7 @@ public class Grid
         }
       }
 
+      // 4 white or 4 black in a row indicates a win.
       if (numWhite == 4 || numBlack == 4) {
         result = true;
       }
@@ -204,6 +224,10 @@ public class Grid
     return result;
   }
 
+  /**
+   * Get the Lines being tracked within our Grid.
+   * @return The ArrayList of Lines that are tracked within our Grid.
+   */
   public ArrayList<Line> getLines()
   {
     findAndListBeadLines();

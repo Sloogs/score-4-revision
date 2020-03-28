@@ -42,6 +42,11 @@ public class GameView
   JLabel statusLabel4 = new JLabel("");
   JButton resetButton = new JButton("Reset");
 
+  /**
+   * Constructor for the GameView. We are using an MVC pattern so this will be attached to a
+   * GameController and will get change updates from the GameModel.
+   * @param m The GameModel to be associated with this GameView.
+   */
   public GameView(GameModel m)
   {
     frame = new JFrame();
@@ -146,79 +151,109 @@ public class GameView
     frame.setVisible(true);
   }
 
+  /**
+   * Sets the GameController that this GameView will be associated with.
+   * @param c The controller to attach to the GameView.
+   */
   public void setController(GameController c)
   {
     controller = c;
   }
 
+  /**
+   * Repaints the view. This is mainly only called from the GameModel to tell this GameView that the
+   * model has been updated.
+   */
   public void update()
   {
     frame.repaint();
   }
 
+  /**
+   * Gets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public JLabel getStatusLabel1()
   {
     return statusLabel1;
   }
 
+  /**
+   * Sets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public void setStatusLabel1(String s)
   {
     statusLabel1.setText(s);
   }
 
+  /**
+   * Gets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public JLabel getStatusLabel2()
   {
     return statusLabel2;
   }
 
+  /**
+   * Sets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public void setStatusLabel2(String s)
   {
     statusLabel2.setText(s);
   }
 
+  /**
+   * Gets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public JLabel getStatusLabel3()
   {
     return statusLabel3;
   }
 
+  /**
+   * Sets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public void setStatusLabel3(String s)
   {
     statusLabel3.setText(s);
   }
 
+  /**
+   * Gets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public JLabel getStatusLabel4()
   {
     return statusLabel4;
   }
 
+  /**
+   * Sets a status label so that it can be manipulated by the controller.
+   * @return The status label  we wish to manipulate.
+   */
   public void setStatusLabel4(String s)
   {
     statusLabel4.setText(s);
   }
 
+  /**
+   * Gets the reset button so that it can be manipulated by the controller.
+   * @return The reset button which we wish to manipulate.
+   */
   public JButton getResetButton()
   {
     return resetButton;
   }
 
-  private class PegGraphic extends JComponent {
-    private Rectangle pegRect;
-
-    public PegGraphic()
-    {
-      pegRect = new Rectangle(5, 60);
-    }
-
-    @Override
-    protected void paintComponent(Graphics g)
-    {
-      super.paintComponent(g);
-      Graphics2D g2 = (Graphics2D) g;
-      g2.setColor(Color.BLACK);
-      g2.draw(pegRect);
-    }
-  }
-
+  /**
+   * This class is used internally to draw our pegs based on the state of our Board, Grid, Pegs,
+   * and Beads.
+   */
   private class PegPanel extends JPanel {
     private final int PEG_WIDTH = 5;
     private final int PEG_HEIGHT = 60;
@@ -228,6 +263,10 @@ public class GameView
     private int numBeads;
     private Peg pegModel;
 
+    /**
+     * Constructs a PegPamel which controls the grapgics logic has our pegs and beads.
+     * @param peg The Peg to which this panel will be attached.
+     */
     public PegPanel(Peg peg)
     {
       pegModel = peg;
@@ -256,6 +295,10 @@ public class GameView
           BEAD_DIAMETER);
     }
 
+    /**
+     * Paints our component. Required by the Java AWT/Swing libraries to draw graphics.
+     * @param g A AWT/Swing Graphics object.
+     */
     @Override
     protected void paintComponent(Graphics g)
     {

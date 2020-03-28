@@ -14,15 +14,20 @@ public class Main
 
   public static void main(String[] args)
   {
-    // if (args.length > 0)
-    // {
-    //   if (args[0].equals("--test"))
-    //   {
-    //     testingMode = true;
-    //   }
-    // }
+    // Check to see if testing mode is enabled.
+    if (args.length > 0)
+    {
+      if (args[0].equals("--test"))
+      {
+        testingMode = true;
+      }
+    }
 
     GameState gameState = new GameState();
+
+    // Check if the testing mode has been engaged.
+    // If not, play the game as normal.
+    // Otherwise, enter testing mode.
 
     if (!testingMode) {
       GameModel model = new GameModel(gameState);
@@ -81,18 +86,32 @@ public class Main
             gameState.getBoard().getGrid().
                 getPeg(row, column).removeBead();
           }
-
-  
         }
-        else if (inputString.contains("show board"))
+        else if (inputString.contains("get white move."))
+        {
+          Move move = gameState.getWhitePlayer().getMove(gameState);
+          String moveString = Helper.translateNumberToABCD(move.getXCoord(), move.getYCoord());
+          System.out.println(moveString);
+        }
+        else if (inputString.contains("get black move."))
+        {
+          Move move = gameState.getBlackPlayer().getMove(gameState);
+          String moveString = Helper.translateNumberToABCD(move.getXCoord(), move.getYCoord());
+          System.out.println(moveString);
+        }
+        else if (inputString.contains("show board."))
         {
           showBoard(gameState);
         }
-        else if (inputString.contains("clear board"))
+        else if (inputString.contains("draw board."))
+        {
+          drawBoard(gameState);
+        }
+        else if (inputString.contains("clear board."))
         {
           gameState.getBoard().clearBoard();
         }
-        else if (inputString.contains("quit"))
+        else if (inputString.contains("quit."))
         {
           running = false;
         }
@@ -173,6 +192,29 @@ public class Main
   }
 
   public static void showBoard(GameState gs)
+  {
+      Peg[][] pegs = gs.getBoard().getGrid().getAllPegs();
+      for(Peg[] row: pegs)
+      {
+          for (Peg peg: row) {
+            Beadlike[] beads = peg.getAllBeads();
+            int maxNumber = beads.length;
+            String[] XChange = {"A","B","C","D"};
+            System.out.print(XChange[peg.getXCoord()] + (peg.getYCoord() + 1) + ": ");
+
+            for (Beadlike bead: beads)
+            {
+              if (bead.getColour() == PlayerColour.WHITE)
+                  System.out.print("W");
+              else if (bead.getColour() == PlayerColour.BLACK)
+                  System.out.print("B");         
+            }
+            System.out.println("");
+          }
+      }
+  }
+
+  public static void drawBoard(GameState gs)
   {
     Peg[][] pegs = gs.getBoard().getGrid().getAllPegs();
     String fourthRow = "";

@@ -9,6 +9,13 @@ public class Bead implements Beadlike
   private int zCoord;
   private boolean isEmpty;
 
+  /**
+   * Contructs a bead.
+   * @param c The colour of the Player that the bead belongs to.
+   * @param x Represents the x position of the Peg the bead will be on.
+   * @param y Represents the x position of the Peg the bead will be on.
+   * @param z Represents the x position of the Peg the bead will be on.
+   */
   public Bead(PlayerColour c, int x, int y, int z)
   {
     Debug.log("Creating bead at: (x: " + x + ", y: " + y +", z: " + z + ")");
