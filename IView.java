@@ -1,4 +1,8 @@
+import javax.swing.JLabel;
+
 public interface IView
-{
-	public void update();
+{  
+  public JLabel getStatusLabel();
+  public void setStatusLabel(String s);
+  public void update();
 }

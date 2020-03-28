@@ -1,0 +1,3 @@
+public enum Stage {
+  GAME_START, GET_WHITE_MOVE, GET_BLACK_MOVE, WIN_FOUND
+}
