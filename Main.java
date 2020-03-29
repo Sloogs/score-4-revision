@@ -30,13 +30,7 @@ public class Main
     // Otherwise, enter testing mode.
 
     if (!testingMode) {
-      GameModel model = new GameModel(gameState);
-      GameView view = new GameView(model);
-      model.setView(view);
-      GameController controller = new GameController(model);
-      view.setController(controller);
-      controller.setView(view);
-      controller.startGame();
+      initGUI(gameState);
     }
     else
     {
@@ -111,12 +105,27 @@ public class Main
         {
           gameState.getBoard().clearBoard();
         }
-        else if (inputString.contains("quit."))
+        else if (inputString.contains("go gui.") || inputString.contains("go interactive."))
+        {
+          initGUI(gameState);
+        }
+        else if (inputString.contains("quit.") || inputString.contains("exit."))
         {
           running = false;
         }
       }
     }
+  }
+
+  public static void initGUI(GameState gs)
+  {
+      GameModel model = new GameModel(gs);
+      GameView view = new GameView(model);
+      model.setView(view);
+      GameController controller = new GameController(model);
+      view.setController(controller);
+      controller.setView(view);
+      controller.startGame();
   }
 
   public static void playerSetup(GameState gs)
